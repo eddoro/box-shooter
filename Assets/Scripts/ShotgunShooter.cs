@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShotgunShooter : MonoBehaviour {
+public class Shooter : MonoBehaviour {
 
 	// Reference to projectile prefab to shoot
 	public GameObject projectile;
@@ -21,14 +21,13 @@ public class ShotgunShooter : MonoBehaviour {
 				// Instantiante projectile at the camera + 1 meter forward with camera rotation
 				GameObject newProjectile = Instantiate(projectile, transform.position + transform.forward, transform.rotation) as GameObject;
 
-                
-                //create an array with the number of children                
-                GameObject[] childs = new GameObject[newProjectile.transform.childCount]; // Example 5 childs.
-                for (int i = 0; i < childs.Length; i++)
-                {
-                    childs[i] = newProjectile.transform.GetChild(i).gameObject;
-                    childs[i].GetComponent<Rigidbody>().AddForce(childs[i].transform.forward * power, ForceMode.VelocityChange);
-                }                    
+				// if the projectile does not have a rigidbody component, add one
+				if (!newProjectile.GetComponent<Rigidbody>()) 
+				{
+					newProjectile.AddComponent<Rigidbody>();
+				}
+				// Apply force to the newProjectile's Rigidbody component if it has one
+				newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * power, ForceMode.VelocityChange);
 				
 				// play sound effect if set
 				if (shootSFX)
